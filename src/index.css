@@ -33,7 +33,7 @@ html, body {
   bottom: 0;
   left: 0;
   right: 0;
-  background-image: url('/public/main-bg.jpg');
+  background-image: url('/main-bg.jpg');
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -173,8 +173,8 @@ html, body {
   height: 100%;
 }
 .letters-circle {
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
   background-color: rgba(211, 211, 211, 0.7);
   display: flex;
@@ -186,16 +186,22 @@ html, body {
   position: absolute;
   top: 50%;
   left: 50%;
-  margin: -15px;
+  margin: -20px;
   font-weight: bold;
   font-size: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  padding: 5px;
 }
 .dragable-letter:hover {
   color: darkorchid;
+}
+.selected-letter {
+  background-color: darkorchid;
+  color: white !important;
+  border-radius: 50%;
 }
 .refresh-letters {
   font-size: 30px;
@@ -205,4 +211,11 @@ html, body {
 }
 .refresh-letters:hover {
   color: darkblue;
+}
+.red-point {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: red;
 }

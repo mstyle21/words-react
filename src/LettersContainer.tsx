@@ -1,11 +1,7 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { StageContext } from "./StageContext";
-
-// let offsetX, offsetY;
-
-function shuffleArray<T>(array: T[]): T[] {
-  return array.sort(() => 0.5 - Math.random());
-}
+import { throttle } from "lodash";
+import { shuffleArray } from "./helpers/utils";
 
 const LettersContainer = () => {
   const { words, foundWords, setFoundWords } = useContext(StageContext);
@@ -33,9 +29,10 @@ const LettersContainer = () => {
 
   const handleMouseMove = () => {
     if (mouseDown) {
-      // console.log("mouse draged", possibleWord);
+      //to be implemented, line between selected letters
     }
   };
+  const throttledMouseMove = throttle(handleMouseMove, 50);
 
   const handleMouseUp = () => {
     if (mouseDown) {
@@ -57,9 +54,6 @@ const LettersContainer = () => {
       setPossibleWord((prev) => prev + clickedLetter);
       setHoverOrder((prev) => [...prev, letterIndex]);
     }
-
-    // offsetX = e.clientX - element.getBoundingClientRect().left;
-    // offsetY = e.clientY - element.getBoundingClientRect().top;
   };
 
   const handleMouseOver = (letterIndex: number) => {
@@ -71,23 +65,21 @@ const LettersContainer = () => {
         setHoverOrder((prev) => [...prev, letterIndex]);
       }
 
-      if (
-        hoverOrder.includes(letterIndex) &&
-        hoverOrder[hoverOrder.length - 2] === letterIndex
-      ) {
+      if (hoverOrder.includes(letterIndex) && hoverOrder[hoverOrder.length - 2] === letterIndex) {
         setPossibleWord((prev) => prev.slice(0, -1));
         setHoverOrder((prev) => prev.slice(0, -1));
       }
     }
   };
 
+  const handleTouchMove = (e: React.TouchEvent) => {
+    console.log(e);
+    //to be implemented for mobile devices
+  };
+
   return (
     <>
-      <div
-        className="letters-container"
-        onMouseLeave={handleMouseUp}
-        onMouseUp={handleMouseUp}
-      >
+      <div className="letters-container" onMouseLeave={handleMouseUp} onMouseUp={handleMouseUp}>
         <span
           style={{
             fontSize: "30px",
@@ -97,24 +89,21 @@ const LettersContainer = () => {
             color: "white",
           }}
         >
-          {possibleWord}
+          {possibleWord.toUpperCase()}
         </span>
-        <div className="letters-circle" onMouseMove={handleMouseMove}>
+        <div className="letters-circle" onMouseMove={() => throttledMouseMove()} onTouchMove={handleTouchMove}>
           {indexedLetters.map((letter) => {
             const rotation = rot;
             rot = rot + angle;
 
             return (
               <div
-                className="dragable-letter"
+                className={`dragable-letter ${hoverOrder.includes(letter.index) ? "selected-letter" : ""}`}
                 key={letter.index}
                 onMouseDown={() => handleMouseDown(letter.index)}
                 onMouseOver={() => handleMouseOver(letter.index)}
                 style={{
                   transform: `rotate(${rotation}deg) translate(80px) rotate(-${rotation}deg)`,
-                  color: hoverOrder.includes(letter.index)
-                    ? "darkorchid"
-                    : "black",
                 }}
               >
                 {letter.value.toUpperCase()}

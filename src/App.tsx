@@ -16,8 +16,6 @@ const stages: TStageDetails[] = [
 export type PAGES = "home" | "stage-selection" | "stage";
 
 function App() {
-  console.log("App loaded");
-
   const [currentPage, setCurrentPage] = useState<PAGES>("home");
   const [selectedStage, setSelectedStage] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
@@ -55,24 +53,13 @@ function App() {
       break;
     case "stage-selection":
       content = (
-        <StageSelection
-          stages={stages}
-          setCurrentPage={setCurrentPage}
-          handleStageSelection={handleStageSelection}
-        />
+        <StageSelection stages={stages} setCurrentPage={setCurrentPage} handleStageSelection={handleStageSelection} />
       );
       break;
     case "stage":
-      selectedStageDetails = stages.find(
-        (stage) => stage.level === selectedStage
-      );
+      selectedStageDetails = stages.find((stage) => stage.level === selectedStage);
       if (selectedStageDetails) {
-        content = (
-          <Stage
-            words={selectedStageDetails.words}
-            setCurrentPage={setCurrentPage}
-          />
-        );
+        content = <Stage words={selectedStageDetails.words} setCurrentPage={setCurrentPage} />;
       }
 
       break;
