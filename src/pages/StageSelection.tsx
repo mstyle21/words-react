@@ -11,19 +11,21 @@ const StageSelection = ({ stages, changePage, stageSelection }: StageSelectionPr
   return (
     <div className="stage-selection-container">
       <h1 className="game-title">Words</h1>
-      <h1 style={{ color: "white" }}>Alege un nivel</h1>
-      <div className="stage-list">
-        {stages.map((stage) => (
-          <button
-            key={stage.level}
-            className="stage-btn"
-            onClick={() => {
-              stageSelection(stage.level);
-            }}
-          >
-            {stage.level}
-          </button>
-        ))}
+      <div>
+        <h1 style={{ color: "white", textAlign: "center" }}>Alege un nivel</h1>
+        <div className="stage-list">
+          {stages.map((stage) => (
+            <button
+              key={stage.level}
+              className="stage-btn"
+              onClick={() => {
+                stageSelection(stage.level);
+              }}
+            >
+              {stage.level}
+            </button>
+          ))}
+        </div>
       </div>
       <button
         className="game-btn"
