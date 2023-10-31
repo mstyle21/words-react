@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WordsContainer from "../components/WordsContainer";
 import LettersContainer from "../components/LettersContainer";
 import { StageContext } from "../context/StageContext";
@@ -10,13 +10,21 @@ type StageProps = {
   stage: number;
   changePage: (page: PAGES) => void;
   stageSelection: (level: number) => void;
+  updateProgress: (level: number) => void;
 };
-const Stage = ({ words, stage, changePage, stageSelection }: StageProps) => {
+const Stage = ({ words, stage, changePage, stageSelection, updateProgress }: StageProps) => {
   const [foundWords, setFoundWords] = useState<string[]>([]);
 
   words = words.sort((a, b) => {
     return a.length - b.length;
   });
+
+  useEffect(() => {
+    if (foundWords.length === words.length) {
+      updateProgress(stage + 1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [foundWords.length]);
 
   return (
     <StageContext.Provider value={{ words, foundWords, setFoundWords }}>

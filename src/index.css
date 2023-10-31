@@ -112,15 +112,20 @@ html, body {
   background-color: rgba(0, 0, 0, 0.3);
   border: none;
   border-radius: 8px;
-  box-shadow: 
-  0 0 1px 1px darkgray,
-  0 0 10px 1px whitesmoke;
-  color: white;
   font-weight: bold;
   font-size: 30px;
+  color: darkgray;
+}
+
+.stage-btn.active-stage {
+  background-color: rgba(0, 0, 0, 0.6);
+  box-shadow: 
+    0 0 1px 1px darkgray,
+    0 0 10px 1px whitesmoke;
+  color: white;
   cursor: pointer;
 }
-.stage-btn:hover {
+.stage-btn.active-stage:hover {
   box-shadow: 
   0 0 1px 1px darkgray,
   0 0 10px 10px whitesmoke;

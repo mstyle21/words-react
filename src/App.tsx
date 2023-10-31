@@ -3,6 +3,7 @@ import Stage from "./pages/Stage";
 import Home from "./pages/Home";
 import StageSelection from "./pages/StageSelection";
 import { stages } from "./data/stages";
+import { useProgress } from "./hooks/useProgress";
 
 export type PAGES = "home" | "stage-selection" | "stage";
 
@@ -10,6 +11,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState<PAGES>("home");
   const [selectedStage, setSelectedStage] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
+  const { progress, updateProgress } = useProgress();
 
   const handleStageSelection = (level: number) => {
     const selectedStageDetails = stages.find((stage) => stage.level === level);
@@ -24,6 +26,10 @@ function App() {
 
   const handleChangePage = (page: PAGES) => {
     setCurrentPage(page);
+  };
+
+  const handleUpdateProgress = (level: number) => {
+    updateProgress({ ...progress, currentStage: level });
   };
 
   if (error) {
@@ -47,7 +53,14 @@ function App() {
       content = <Home changePage={handleChangePage} />;
       break;
     case "stage-selection":
-      content = <StageSelection stages={stages} changePage={handleChangePage} stageSelection={handleStageSelection} />;
+      content = (
+        <StageSelection
+          stages={stages}
+          userProgress={progress}
+          changePage={handleChangePage}
+          stageSelection={handleStageSelection}
+        />
+      );
       break;
     case "stage":
       selectedStageDetails = stages.find((stage) => stage.level === selectedStage);
@@ -59,6 +72,7 @@ function App() {
             words={selectedStageDetails.words}
             changePage={handleChangePage}
             stageSelection={handleStageSelection}
+            updateProgress={handleUpdateProgress}
           />
         );
       }
