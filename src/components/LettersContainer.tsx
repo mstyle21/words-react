@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
-import { StageContext } from "./StageContext";
+import { StageContext } from "../context/StageContext";
 import { throttle } from "lodash";
-import { shuffleArray } from "./helpers/utils";
+import { shuffleArray } from "../helpers/utils";
 
 const LettersContainer = () => {
   const { words, foundWords, setFoundWords } = useContext(StageContext);

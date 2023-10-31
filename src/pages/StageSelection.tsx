@@ -1,5 +1,5 @@
 import { SetStateAction } from "react";
-import { PAGES, TStageDetails } from "./App";
+import { PAGES, TStageDetails } from "../App";
 
 const StageSelection = ({
   stages,

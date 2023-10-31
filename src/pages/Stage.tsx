@@ -1,8 +1,8 @@
 import { SetStateAction, useState } from "react";
-import WordsContainer from "./WordsContainer";
-import LettersContainer from "./LettersContainer";
-import { StageContext } from "./StageContext";
-import { PAGES } from "./App";
+import WordsContainer from "../components/WordsContainer";
+import LettersContainer from "../components/LettersContainer";
+import { StageContext } from "../context/StageContext";
+import { PAGES } from "../App";
 
 const Stage = ({
   words,
@@ -14,9 +14,7 @@ const Stage = ({
   const [foundWords, setFoundWords] = useState<string[]>([]);
 
   if (foundWords.length === words.length) {
-    return (
-      <h1 style={{ textAlign: "center", color: "white" }}>Congratulations!</h1>
-    );
+    return <h1 style={{ textAlign: "center", color: "white" }}>Congratulations!</h1>;
   }
 
   words = words.sort((a, b) => {

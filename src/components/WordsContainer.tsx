@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { StageContext } from "./StageContext";
+import { StageContext } from "../context/StageContext";
 
 const WordsContainer = () => {
   const { words, foundWords } = useContext(StageContext);

@@ -1,17 +1,8 @@
 import { useState } from "react";
-import Stage from "./Stage";
-import Home from "./Home";
-import StageSelection from "./StageSelection";
-
-export type TStageDetails = {
-  level: number;
-  words: string[];
-};
-
-const stages: TStageDetails[] = [
-  { level: 1, words: ["bucuros", "bursuc", "curs", "corb", "sub", "bou"] },
-  { level: 2, words: ["vanilie", "nivel", "linie", "vale", "vin", "val"] },
-];
+import Stage from "./pages/Stage";
+import Home from "./pages/Home";
+import StageSelection from "./pages/StageSelection";
+import { stages } from "./data/stages";
 
 export type PAGES = "home" | "stage-selection" | "stage";
 
