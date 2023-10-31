@@ -1,10 +1,14 @@
-import { SetStateAction } from "react";
 import { PAGES } from "../App";
 
-const Home = ({ setCurrentPage }: { setCurrentPage: React.Dispatch<SetStateAction<PAGES>> }) => {
+type HomeProps = {
+  changePage: (page: PAGES) => void;
+};
+
+const Home = ({ changePage }: HomeProps) => {
   return (
     <div className="home-container">
-      <button className="game-btn" onClick={() => setCurrentPage("stage-selection")}>
+      <h1 className="game-title">Words</h1>
+      <button className="game-btn" style={{ margin: "auto" }} onClick={() => changePage("stage-selection")}>
         Start
       </button>
     </div>

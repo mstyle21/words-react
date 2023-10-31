@@ -1,21 +1,18 @@
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import WordsContainer from "../components/WordsContainer";
 import LettersContainer from "../components/LettersContainer";
 import { StageContext } from "../context/StageContext";
 import { PAGES } from "../App";
+import { stages } from "../data/stages";
 
-const Stage = ({
-  words,
-  setCurrentPage,
-}: {
+type StageProps = {
   words: string[];
-  setCurrentPage: React.Dispatch<SetStateAction<PAGES>>;
-}) => {
+  stage: number;
+  changePage: (page: PAGES) => void;
+  stageSelection: (level: number) => void;
+};
+const Stage = ({ words, stage, changePage, stageSelection }: StageProps) => {
   const [foundWords, setFoundWords] = useState<string[]>([]);
-
-  if (foundWords.length === words.length) {
-    return <h1 style={{ textAlign: "center", color: "white" }}>Congratulations!</h1>;
-  }
 
   words = words.sort((a, b) => {
     return a.length - b.length;
@@ -24,23 +21,33 @@ const Stage = ({
   return (
     <StageContext.Provider value={{ words, foundWords, setFoundWords }}>
       <div className="stage-container">
+        <div className="top-info">
+          <span></span>
+          <h1 className="level-info">Nivelul {stage}</h1>
+          <span></span>
+        </div>
         <WordsContainer />
         <LettersContainer />
         <button
-          className="game-btn"
-          style={{
-            position: "absolute",
-            left: 0,
-            top: 0,
-            bottom: 0,
-            margin: "auto",
-          }}
+          className="game-btn stage-back-btn"
           onClick={() => {
-            setCurrentPage("stage-selection");
+            changePage("stage-selection");
           }}
         >
           Inapoi
         </button>
+        {foundWords.length === words.length && (
+          <>
+            <div className="finish-overlay">
+              <h1 style={{ textAlign: "center", color: "white" }}>Congratulations!</h1>
+            </div>
+            {stage < stages.length && (
+              <button className="game-btn next-stage-btn" onClick={() => stageSelection(stage + 1)}>
+                Nivelul {stage + 1}
+              </button>
+            )}
+          </>
+        )}
       </div>
     </StageContext.Provider>
   );

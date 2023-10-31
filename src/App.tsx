@@ -22,6 +22,10 @@ function App() {
     }
   };
 
+  const handleChangePage = (page: PAGES) => {
+    setCurrentPage(page);
+  };
+
   if (error) {
     setTimeout(() => {
       const elem = document.getElementById("errorMsg");
@@ -40,17 +44,23 @@ function App() {
   switch (currentPage) {
     default:
     case "home":
-      content = <Home setCurrentPage={setCurrentPage} />;
+      content = <Home changePage={handleChangePage} />;
       break;
     case "stage-selection":
-      content = (
-        <StageSelection stages={stages} setCurrentPage={setCurrentPage} handleStageSelection={handleStageSelection} />
-      );
+      content = <StageSelection stages={stages} changePage={handleChangePage} stageSelection={handleStageSelection} />;
       break;
     case "stage":
       selectedStageDetails = stages.find((stage) => stage.level === selectedStage);
       if (selectedStageDetails) {
-        content = <Stage words={selectedStageDetails.words} setCurrentPage={setCurrentPage} />;
+        content = (
+          <Stage
+            key={selectedStage}
+            stage={selectedStage}
+            words={selectedStageDetails.words}
+            changePage={handleChangePage}
+            stageSelection={handleStageSelection}
+          />
+        );
       }
 
       break;
@@ -58,10 +68,9 @@ function App() {
 
   return (
     <div className="game-wrapper">
-      <div className="game-background"></div>
       <div className="game-container">
+        <div className="game-background"></div>
         <div className="game-box">
-          <h1 className="game-title">Words</h1>
           {error && <div id="errorMsg">{error}</div>}
           {content}
         </div>

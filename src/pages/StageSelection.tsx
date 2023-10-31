@@ -1,32 +1,35 @@
-import { SetStateAction } from "react";
-import { PAGES, TStageDetails } from "../App";
+import { PAGES } from "../App";
+import { TStageDetails } from "../data/stages";
 
-const StageSelection = ({
-  stages,
-  setCurrentPage,
-  handleStageSelection,
-}: {
+type StageSelectionProps = {
   stages: TStageDetails[];
-  setCurrentPage: React.Dispatch<SetStateAction<PAGES>>;
-  handleStageSelection: (level: number) => void;
-}) => {
+  changePage: (page: PAGES) => void;
+  stageSelection: (level: number) => void;
+};
+
+const StageSelection = ({ stages, changePage, stageSelection }: StageSelectionProps) => {
   return (
     <div className="stage-selection-container">
-      <h1 style={{ color: "white" }}>Select stage</h1>
+      <h1 className="game-title">Words</h1>
+      <h1 style={{ color: "white" }}>Alege un nivel</h1>
       <div className="stage-list">
         {stages.map((stage) => (
           <button
             key={stage.level}
             className="stage-btn"
             onClick={() => {
-              handleStageSelection(stage.level);
+              stageSelection(stage.level);
             }}
           >
             {stage.level}
           </button>
         ))}
       </div>
-      <button className="game-btn" onClick={() => setCurrentPage("home")}>
+      <button
+        className="game-btn"
+        onClick={() => changePage("home")}
+        style={{ alignSelf: "end", marginRight: "30px", marginBottom: "30px" }}
+      >
         Inapoi
       </button>
     </div>
