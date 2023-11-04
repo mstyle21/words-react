@@ -215,13 +215,9 @@ html, body {
   cursor: pointer;
   padding: 5px;
 }
-.dragable-letter:hover {
-  color: darkorchid;
-}
-@media (hover: none) {
-  .dragable-letter:hover {
-    color: inherit;
-  }
+
+@media (hover: hover) and (pointer: fine) {
+  .dragable-letter:hover { color: darkorchid; }
 }
 .selected-letter {
   background-color: darkorchid;
