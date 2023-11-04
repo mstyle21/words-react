@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { RefObject, useContext, useEffect, useRef, useState } from "react";
 import { StageContext } from "../context/StageContext";
 import { throttle } from "lodash";
 import { shuffleArray } from "../helpers/utils";
@@ -18,6 +18,21 @@ const LettersContainer = () => {
       }))
     )
   );
+  const [letterBoxes, setLetterBoxes] = useState<{ [key: number]: { x: number; y: number } }>({});
+
+  const lettersRef = useRef<RefObject<HTMLDivElement>[]>(
+    Array.from({ length: letters.length }, () => React.createRef())
+  );
+
+  useEffect(() => {
+    lettersRef.current.forEach((letterBox, index) => {
+      if (letterBox.current) {
+        const boxRect = letterBox.current.getBoundingClientRect();
+
+        setLetterBoxes((prev) => ({ ...prev, [index]: { x: boxRect.x, y: boxRect.y } }));
+      }
+    });
+  }, [indexedLetters]);
 
   const nrLetters = letters.length;
   let rot = 0;
@@ -27,6 +42,36 @@ const LettersContainer = () => {
     setIndexedLetters(shuffleArray([...indexedLetters]));
   };
 
+  const checkPossibleWord = () => {
+    if (words.includes(possibleWord) && !foundWords.includes(possibleWord)) {
+      setFoundWords((prev) => [...prev, possibleWord]);
+    }
+
+    setPossibleWord("");
+    setHoverOrder([]);
+  };
+
+  const markFirstPossibleLetter = (letterIndex: number) => {
+    const clickedLetter = letters[letterIndex];
+
+    setPossibleWord((prev) => prev + clickedLetter);
+    setHoverOrder((prev) => [...prev, letterIndex]);
+  };
+
+  const markHoveredPossibleLetter = (letterIndex: number) => {
+    const hoveredLetter = letters[letterIndex];
+
+    if (!hoverOrder.includes(letterIndex)) {
+      setPossibleWord((prev) => prev + hoveredLetter);
+      setHoverOrder((prev) => [...prev, letterIndex]);
+    }
+
+    if (hoverOrder.includes(letterIndex) && hoverOrder[hoverOrder.length - 2] === letterIndex) {
+      setPossibleWord((prev) => prev.slice(0, -1));
+      setHoverOrder((prev) => prev.slice(0, -1));
+    }
+  };
+
   const handleMouseMove = () => {
     if (mouseDown) {
       //to be implemented, line between selected letters
@@ -34,52 +79,69 @@ const LettersContainer = () => {
   };
   const throttledMouseMove = throttle(handleMouseMove, 50);
 
+  /**
+   * When user clicks up or remove finger from screen
+   * Check the formed word between stage words
+   */
   const handleMouseUp = () => {
     if (mouseDown) {
       setMouseDown(false);
-      if (words.includes(possibleWord) && !foundWords.includes(possibleWord)) {
-        setFoundWords((prev) => [...prev, possibleWord]);
-      }
-
-      setPossibleWord("");
-      setHoverOrder([]);
+      checkPossibleWord();
     }
+  };
+  const handleTouchEnd = () => {
+    checkPossibleWord();
   };
 
   const handleMouseDown = (letterIndex: number) => {
     if (!mouseDown) {
       setMouseDown(true);
-      const clickedLetter = letters[letterIndex];
-
-      setPossibleWord((prev) => prev + clickedLetter);
-      setHoverOrder((prev) => [...prev, letterIndex]);
+      markFirstPossibleLetter(letterIndex);
     }
+  };
+  const handleTouchStart = (letterIndex: number) => {
+    markFirstPossibleLetter(letterIndex);
   };
 
   const handleMouseOver = (letterIndex: number) => {
     if (mouseDown) {
-      const hoveredLetter = letters[letterIndex];
-
-      if (!hoverOrder.includes(letterIndex)) {
-        setPossibleWord((prev) => prev + hoveredLetter);
-        setHoverOrder((prev) => [...prev, letterIndex]);
-      }
-
-      if (hoverOrder.includes(letterIndex) && hoverOrder[hoverOrder.length - 2] === letterIndex) {
-        setPossibleWord((prev) => prev.slice(0, -1));
-        setHoverOrder((prev) => prev.slice(0, -1));
-      }
+      markHoveredPossibleLetter(letterIndex);
     }
   };
 
+  const boxRange = 45;
+  /**
+   * Get X and Y of touch move and compare it with positions of saved boxes
+   */
   const handleTouchMove = (e: React.TouchEvent) => {
-    console.log(e);
-    //to be implemented for mobile devices
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
+
+    Object.entries(letterBoxes).forEach((item) => {
+      const index = parseInt(item[0]);
+      const letterBox = item[1];
+      if (
+        touchX > letterBox.x &&
+        touchX < letterBox.x + boxRange &&
+        touchY > letterBox.y &&
+        touchY < letterBox.y + boxRange
+      ) {
+        markHoveredPossibleLetter(index);
+
+        return;
+      }
+    });
   };
+  const throttledTouchMove = throttle(handleTouchMove, 50);
 
   return (
     <>
-      <div className="letters-container" onMouseLeave={handleMouseUp} onMouseUp={handleMouseUp}>
+      <div
+        className="letters-container"
+        onMouseLeave={handleMouseUp}
+        onMouseUp={handleMouseUp}
+        onTouchEnd={handleTouchEnd}
+      >
         <span
           style={{
             fontSize: "30px",
@@ -91,7 +153,11 @@ const LettersContainer = () => {
         >
           {possibleWord.toUpperCase()}
         </span>
-        <div className="letters-circle" onMouseMove={() => throttledMouseMove()} onTouchMove={handleTouchMove}>
+        <div
+          className="letters-circle"
+          onMouseMove={() => throttledMouseMove()}
+          onTouchMove={(e) => throttledTouchMove(e)}
+        >
           {indexedLetters.map((letter) => {
             const rotation = rot;
             rot = rot + angle;
@@ -100,8 +166,10 @@ const LettersContainer = () => {
               <div
                 className={`dragable-letter ${hoverOrder.includes(letter.index) ? "selected-letter" : ""}`}
                 key={letter.index}
+                ref={lettersRef.current[letter.index]}
                 onMouseDown={() => handleMouseDown(letter.index)}
                 onMouseOver={() => handleMouseOver(letter.index)}
+                onTouchStart={() => handleTouchStart(letter.index)}
                 style={{
                   transform: `rotate(${rotation}deg) translate(80px) rotate(-${rotation}deg)`,
                 }}

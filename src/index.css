@@ -4,6 +4,7 @@ html, body {
   max-height: 100vh;
   height: 100%;
   width: 100%;
+  overscroll-behavior: none;
 }
 #root {
   height: 100%;
@@ -216,6 +217,11 @@ html, body {
 }
 .dragable-letter:hover {
   color: darkorchid;
+}
+@media (hover: none) {
+  .dragable-letter:hover {
+    color: inherit;
+  }
 }
 .selected-letter {
   background-color: darkorchid;

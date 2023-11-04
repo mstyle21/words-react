@@ -27,7 +27,7 @@ const Stage = ({ words, stage, changePage, stageSelection, updateProgress }: Sta
   }, [foundWords.length]);
 
   return (
-    <StageContext.Provider value={{ words, foundWords, setFoundWords }}>
+    <StageContext.Provider value={{ stage, words, foundWords, setFoundWords }}>
       <div className="stage-container">
         <div className="top-info">
           <span></span>
