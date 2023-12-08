@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import WordsContainer from "../components/WordsContainer";
 import LettersContainer from "../components/LettersContainer";
 import { StageContext } from "../context/StageContext";
-import { PAGES } from "../App";
 import { stages } from "../data/stages";
+import { PAGES } from "../types";
 
 type StageProps = {
   words: string[];
@@ -12,7 +12,13 @@ type StageProps = {
   stageSelection: (level: number) => void;
   updateProgress: (level: number) => void;
 };
-const Stage = ({ words, stage, changePage, stageSelection, updateProgress }: StageProps) => {
+const Stage = ({
+  words,
+  stage,
+  changePage,
+  stageSelection,
+  updateProgress,
+}: StageProps) => {
   const [foundWords, setFoundWords] = useState<string[]>([]);
 
   words = words.sort((a, b) => {
@@ -47,10 +53,15 @@ const Stage = ({ words, stage, changePage, stageSelection, updateProgress }: Sta
         {foundWords.length === words.length && (
           <>
             <div className="finish-overlay">
-              <h1 style={{ textAlign: "center", color: "white" }}>Congratulations!</h1>
+              <h1 style={{ textAlign: "center", color: "white" }}>
+                Congratulations!
+              </h1>
             </div>
             {stage < stages.length && (
-              <button className="game-btn next-stage-btn" onClick={() => stageSelection(stage + 1)}>
+              <button
+                className="game-btn next-stage-btn"
+                onClick={() => stageSelection(stage + 1)}
+              >
                 Nivelul {stage + 1}
               </button>
             )}

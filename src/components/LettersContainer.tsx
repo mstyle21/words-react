@@ -1,10 +1,10 @@
-import React, { RefObject, useContext, useEffect, useRef, useState } from "react";
-import { StageContext } from "../context/StageContext";
+import React, { RefObject, useEffect, useRef, useState } from "react";
+import { useStageContext } from "../context/StageContext";
 import { throttle } from "lodash";
-import { shuffleArray } from "../helpers/utils";
+import { shuffleArray } from "../utils";
 
 const LettersContainer = () => {
-  const { words, foundWords, setFoundWords } = useContext(StageContext);
+  const { words, foundWords, setFoundWords } = useStageContext();
   const letters = words[words.length - 1].split("");
 
   const [possibleWord, setPossibleWord] = useState("");
@@ -18,7 +18,9 @@ const LettersContainer = () => {
       }))
     )
   );
-  const [letterBoxes, setLetterBoxes] = useState<{ [key: number]: { x: number; y: number } }>({});
+  const [letterBoxes, setLetterBoxes] = useState<{
+    [key: number]: { x: number; y: number };
+  }>({});
 
   const lettersRef = useRef<RefObject<HTMLDivElement>[]>(
     Array.from({ length: letters.length }, () => React.createRef())
@@ -29,7 +31,10 @@ const LettersContainer = () => {
       if (letterBox.current) {
         const boxRect = letterBox.current.getBoundingClientRect();
 
-        setLetterBoxes((prev) => ({ ...prev, [index]: { x: boxRect.x, y: boxRect.y } }));
+        setLetterBoxes((prev) => ({
+          ...prev,
+          [index]: { x: boxRect.x, y: boxRect.y },
+        }));
       }
     });
   }, [indexedLetters]);
@@ -66,7 +71,10 @@ const LettersContainer = () => {
       setHoverOrder((prev) => [...prev, letterIndex]);
     }
 
-    if (hoverOrder.includes(letterIndex) && hoverOrder[hoverOrder.length - 2] === letterIndex) {
+    if (
+      hoverOrder.includes(letterIndex) &&
+      hoverOrder[hoverOrder.length - 2] === letterIndex
+    ) {
       setPossibleWord((prev) => prev.slice(0, -1));
       setHoverOrder((prev) => prev.slice(0, -1));
     }
@@ -164,7 +172,9 @@ const LettersContainer = () => {
 
             return (
               <div
-                className={`dragable-letter ${hoverOrder.includes(letter.index) ? "selected-letter" : ""}`}
+                className={`dragable-letter ${
+                  hoverOrder.includes(letter.index) ? "selected-letter" : ""
+                }`}
                 key={letter.index}
                 ref={lettersRef.current[letter.index]}
                 onMouseDown={() => handleMouseDown(letter.index)}

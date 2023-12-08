@@ -1,8 +1,7 @@
-import { useContext } from "react";
-import { StageContext } from "../context/StageContext";
+import { useStageContext } from "../context/StageContext";
 
 const WordsContainer = () => {
-  const { words, foundWords } = useContext(StageContext);
+  const { words, foundWords } = useStageContext();
 
   return (
     <div className="words-container">

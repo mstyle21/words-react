@@ -4,8 +4,7 @@ import Home from "./pages/Home";
 import StageSelection from "./pages/StageSelection";
 import { stages } from "./data/stages";
 import { useProgress } from "./hooks/useProgress";
-
-export type PAGES = "home" | "stage-selection" | "stage";
+import { PAGES } from "./types";
 
 function App() {
   const [currentPage, setCurrentPage] = useState<PAGES>("home");
@@ -46,7 +45,6 @@ function App() {
   }
 
   let content;
-  let selectedStageDetails;
   switch (currentPage) {
     default:
     case "home":
@@ -62,8 +60,8 @@ function App() {
         />
       );
       break;
-    case "stage":
-      selectedStageDetails = stages.find((stage) => stage.level === selectedStage);
+    case "stage": {
+      const selectedStageDetails = stages.find((stage) => stage.level === selectedStage);
       if (selectedStageDetails) {
         content = (
           <Stage
@@ -78,6 +76,7 @@ function App() {
       }
 
       break;
+    }
   }
 
   return (

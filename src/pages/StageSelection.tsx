@@ -1,6 +1,6 @@
-import { PAGES } from "../App";
 import { TStageDetails } from "../data/stages";
 import { TUserProgress } from "../hooks/useProgress";
+import { PAGES } from "../types";
 
 type StageSelectionProps = {
   stages: TStageDetails[];
@@ -9,7 +9,12 @@ type StageSelectionProps = {
   stageSelection: (level: number) => void;
 };
 
-const StageSelection = ({ stages, userProgress, changePage, stageSelection }: StageSelectionProps) => {
+const StageSelection = ({
+  stages,
+  userProgress,
+  changePage,
+  stageSelection,
+}: StageSelectionProps) => {
   return (
     <div className="stage-selection-container">
       <h1 className="game-title">Words</h1>
@@ -19,7 +24,9 @@ const StageSelection = ({ stages, userProgress, changePage, stageSelection }: St
           {stages.map((stage) => (
             <button
               key={stage.level}
-              className={`stage-btn ${stage.level <= userProgress.currentStage ? "active-stage" : ""}`}
+              className={`stage-btn ${
+                stage.level <= userProgress.currentStage ? "active-stage" : ""
+              }`}
               onClick={() => {
                 if (stage.level <= userProgress.currentStage) {
                   stageSelection(stage.level);

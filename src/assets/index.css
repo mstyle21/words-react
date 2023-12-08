@@ -37,7 +37,7 @@ html, body {
   bottom: 0;
   left: 0;
   right: 0;
-  background-image: url('/main-bg.jpg');
+  background-image: url('src/assets/main-bg.jpg');
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;

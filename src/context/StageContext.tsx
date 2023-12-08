@@ -1,4 +1,4 @@
-import { SetStateAction, createContext } from "react";
+import { SetStateAction, createContext, useContext } from "react";
 
 type TStageContext = {
   stage: number;
@@ -12,3 +12,13 @@ export const StageContext = createContext<TStageContext>({
   foundWords: [],
   setFoundWords: () => {},
 });
+
+export const useStageContext = () => {
+  const context = useContext(StageContext);
+
+  if (context === undefined) {
+    throw new Error("Cannot use stage context outside StageContextProvider !");
+  }
+
+  return context;
+};
